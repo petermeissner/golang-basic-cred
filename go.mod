@@ -1,4 +1,4 @@
-module user-management
+module golang-basic-cred
 
 go 1.20
 
