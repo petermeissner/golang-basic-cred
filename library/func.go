@@ -1,4 +1,4 @@
-package main
+package library
 
 import (
 	"bufio"
@@ -13,51 +13,20 @@ import (
 
 	"golang.org/x/crypto/bcrypt"
 	"golang.org/x/term"
-	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
 
-func log_if_fatal(e error) {
+func Log_if_fatal(e error) {
 	if e != nil {
 		log.Fatal(e)
 	}
 }
 
-// Credential type
-//
-// with hashed password after adding salt and pepper
-type Credential struct {
-	Username string
-	Salt     string
-	Hash     string
-}
-
-// Credential type
-//
-// with hashed password after adding salt and pepper
-// ready to be put in DB
-type CredentialSQL struct {
-	gorm.Model
-	Username string `gorm:"unique"`
-	Salt     string
-	Hash     string
-}
-
-// Credential type
-//
-// with raw input
-type Auth struct {
-	Username string
-	Password string
-}
-
-const BCRYPT_DEFAULT_COST = bcrypt.DefaultCost + 4
-
 // # str_random
 //
 // produce string of random characters of length n
-func str_random(n int) string {
+func Str_random(n int) string {
 	rand.Seed(time.Now().UnixNano())
 	letterRunes := []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!§$%&/()=?+*'#,;.:-_")
 	b := make([]rune, n)
@@ -73,7 +42,7 @@ func str_random(n int) string {
 func Make_credential(username string, password string, pepper string) Credential {
 
 	// generate random salt
-	salt := str_random(20)
+	salt := Str_random(20)
 
 	// salt and pepper pw then hash it
 	pw_hash := Hash_SaltPepper_Password(password, salt, pepper)
@@ -115,23 +84,23 @@ func Create_read_pepper() string {
 	if err != nil {
 
 		host, err := os.Hostname()
-		log_if_fatal(err)
-		pepper = host + "-" + str_random(12)
+		Log_if_fatal(err)
+		pepper = host + "-" + Str_random(12)
 		err = os.WriteFile(fname, []byte(pepper), 0600)
-		log_if_fatal(err)
+		Log_if_fatal(err)
 
 	} else {
 
 		tmp, err := os.ReadFile(fname)
 		pepper = string(tmp)
-		log_if_fatal(err)
+		Log_if_fatal(err)
 
 	}
 
 	return pepper
 }
 
-func get_input(prompt string) string {
+func Get_input(prompt string) string {
 
 	r := bufio.NewReader(os.Stdin)
 
@@ -149,9 +118,9 @@ func get_input(prompt string) string {
 //
 // prints any object (as JSON)
 // as long as it can be serialized to JSON
-func pretty_print(obj any) {
+func Pretty_print(obj any) {
 	enc, err := json.MarshalIndent(obj, "", "  ")
-	log_if_fatal(err)
+	Log_if_fatal(err)
 	fmt.Println(string(enc))
 }
 
@@ -161,10 +130,10 @@ func pretty_print(obj any) {
 // - will hide password input in terminal
 func Get_auth_from_term() Auth {
 	// get credentials
-	username := get_input("Enter user name:")
+	username := Get_input("Enter user name:")
 	fmt.Print("Enter password: ")
 	pw, err := term.ReadPassword(int(syscall.Stdin))
-	log_if_fatal(err)
+	Log_if_fatal(err)
 
 	return Auth{Username: username, Password: string(pw)}
 }
@@ -200,63 +169,4 @@ func Check_credential(db *gorm.DB, auth Auth) bool {
 	} else {
 		return true
 	}
-}
-
-// try it out
-func main() {
-
-	// establish db connection
-	gorm_dialect := sqlite.Open("gorm.db")
-	db, err := gorm.Open(gorm_dialect, &gorm.Config{})
-	log_if_fatal(err)
-
-	// user selection on task to do
-	menu_string := "\n(1) add/update credential" +
-		"\n(2) check credential" +
-		"\n(3) list credentials\n"
-
-	for {
-		menu := get_input(menu_string)
-		switch menu {
-
-		case "1":
-			// get authentication info
-			auth := Get_auth_from_term()
-
-			// Hash credentials and store them in db
-			Upsert_auth_as_credential_to_db(db, auth)
-
-			// check results
-			var res []CredentialSQL
-			db.Find(&res)
-			fmt.Println("\nAll entries ... N = ", len(res))
-
-			db.Where("Username = ?", auth.Username).Find(&CredentialSQL{}).Scan(&res)
-			fmt.Println("\nCurrent entry ... ")
-			pretty_print(res)
-
-		case "2":
-			// get authentication info
-			auth := Get_auth_from_term()
-
-			is_ok := Check_credential(db, auth)
-			if is_ok {
-				fmt.Println("Check OK")
-			} else {
-				fmt.Println("Check FAILED")
-			}
-
-		case "3":
-			// get all credentials
-			var res []CredentialSQL
-			db.Find(&res)
-			pretty_print(res)
-
-		default:
-		}
-
-		// reset selection
-		menu = ""
-	}
-
 }
