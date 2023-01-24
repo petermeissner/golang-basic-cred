@@ -4,6 +4,7 @@ import (
 	"testing"
 	"time"
 
+	. "github.com/petermeissner/golang-basic-cred/library"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -64,7 +65,7 @@ func Test_basic_hashing_pepper(t *testing.T) {
 }
 
 func Test_basic_hashing(t *testing.T) {
-	slt := str_random(14)
+	slt := Str_random(14)
 
 	pw1 := "ohmei"
 	ppr1 := Create_read_pepper()
