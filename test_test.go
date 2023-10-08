@@ -6,6 +6,8 @@ import (
 
 	. "github.com/petermeissner/golang-basic-cred/library"
 	"golang.org/x/crypto/bcrypt"
+	"gorm.io/driver/sqlite"
+	"gorm.io/gorm"
 )
 
 const BCRYPT_TEST_COSTS = 0
@@ -112,4 +114,12 @@ func Test_time_for_hashing(t *testing.T) {
 	if matching != nil {
 		t.Error("PW-Hash-Comparison failed", matching.Error())
 	}
+}
+
+func Test_db_connection(t *testing.T) {
+
+	// establish db connection
+	gorm_dialect := sqlite.Open("test-db.db")
+	_, err := gorm.Open(gorm_dialect, &gorm.Config{})
+	Log_if_fatal(err)
 }
