@@ -20,6 +20,8 @@ jobs:
       
       - run: go version
       
+      - run: go env
+      
       - name: Install dependencies
         run: go get .
       
