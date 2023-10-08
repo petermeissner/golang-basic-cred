@@ -20,6 +20,8 @@ jobs:
       
       - run: go version
       
+      - run: go env -w CGO_ENABLED=0
+
       - run: go env
       
       - name: Install dependencies
