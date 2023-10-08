@@ -3,9 +3,11 @@ on: [push]
 
 jobs:
   build:
-   strategy:
+    
+    strategy:
       matrix:
         platform: [ubuntu-latest, windows-latest]
+
     runs-on: ${{ matrix.platform }}
 
     steps:
