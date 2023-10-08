@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 
+	"github.com/glebarez/sqlite"
 	. "github.com/petermeissner/golang-basic-cred/library"
-	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
 

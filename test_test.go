@@ -4,9 +4,9 @@ import (
 	"testing"
 	"time"
 
+	"github.com/glebarez/sqlite"
 	. "github.com/petermeissner/golang-basic-cred/library"
 	"golang.org/x/crypto/bcrypt"
-	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
 
