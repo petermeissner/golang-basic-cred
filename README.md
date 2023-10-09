@@ -11,3 +11,10 @@ Allows to (see ./library/func.go and ./library/structs.go) ...
 - create random credentials
 - check credentials 
 - read in passwords from terminal
+
+
+# Build Binary / Build Credentials-Manager
+
+```
+go build ./credmanager/
+```
