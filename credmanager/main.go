@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/glebarez/sqlite"
-	. "github.com/petermeissner/golang-basic-cred/library"
+	. "github.com/petermeissner/golang-basic-cred/golang-basic-cred"
 	"gorm.io/gorm"
 )
 
