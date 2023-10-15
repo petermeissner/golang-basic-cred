@@ -7,7 +7,7 @@ require (
 	golang.org/x/term v0.4.0
 	gorm.io/driver/sqlite v1.4.4
 	gorm.io/gorm v1.25.2
-	github.com/petermeissner/golang-basic-cred/golang-basic-cred v0.1.2
+	github.com/petermeissner/golang-basic-cred/golang-basic-cred v0.0.0
 )
 
 require (
@@ -25,4 +25,8 @@ require (
 	modernc.org/mathutil v1.5.0 // indirect
 	modernc.org/memory v1.5.0 // indirect
 	modernc.org/sqlite v1.23.1 // indirect
+)
+
+replace (
+	github.com/petermeissner/golang-basic-cred/golang-basic-cred v0.0.0 => ../golang-basic-cred
 )
