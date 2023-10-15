@@ -18,3 +18,10 @@ Allows to (see ./library/func.go and ./library/structs.go) ...
 ```
 go build ./credmanager/
 ```
+
+
+# ToDos
+
+1) Repair build pipeline
+2) Sonatype
+3) TestCoverage
