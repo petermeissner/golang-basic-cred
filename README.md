@@ -22,6 +22,6 @@ go build ./credmanager/
 
 # ToDos
 
-1) Repair build pipeline
+1) Repair build pipeline - ok
 2) Sonatype
 3) TestCoverage
