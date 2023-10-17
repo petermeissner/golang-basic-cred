@@ -1,4 +1,4 @@
-module github.com/petermeissner/golang-basic-cred
+module github.com/petermeissner/golang-basic-cred/golang-basic-cred
 
 go 1.21
 
