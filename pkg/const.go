@@ -1,4 +1,4 @@
-package library
+package pkg
 
 import "golang.org/x/crypto/bcrypt"
 

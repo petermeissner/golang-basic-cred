@@ -25,16 +25,13 @@ jobs:
       - run: go env
       
       - name: Install dependencies
-        run: cd golang-basic-cred && go get .
+        run: go get .
 
-      - name: Install dependencies
-        run: cd credmanager && go get .
-      
       - name: Build
         run: go build -v ./credmanager
 
       - name: Build
-        run: go build -v ./golang-basic-cred
+        run: go build -v ./pkg
       
       - name: Test with the Go CLI
-        run: cd ./golang-basic-cred && go test -v
+        run: go test ./pkg -v
