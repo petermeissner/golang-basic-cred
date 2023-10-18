@@ -1,0 +1,22 @@
+mode: set
+github.com/petermeissner/golang-basic-cred/func.go:20.28,21.14 1 1
+github.com/petermeissner/golang-basic-cred/func.go:21.14,23.3 1 0
+github.com/petermeissner/golang-basic-cred/func.go:29.31,33.19 4 1
+github.com/petermeissner/golang-basic-cred/func.go:33.19,35.3 1 1
+github.com/petermeissner/golang-basic-cred/func.go:36.2,36.18 1 1
+github.com/petermeissner/golang-basic-cred/func.go:42.82,57.2 4 0
+github.com/petermeissner/golang-basic-cred/func.go:59.83,62.16 3 1
+github.com/petermeissner/golang-basic-cred/func.go:62.16,63.13 1 0
+github.com/petermeissner/golang-basic-cred/func.go:65.2,65.16 1 1
+github.com/petermeissner/golang-basic-cred/func.go:71.89,74.2 2 0
+github.com/petermeissner/golang-basic-cred/func.go:79.34,84.16 4 1
+github.com/petermeissner/golang-basic-cred/func.go:84.16,92.3 5 0
+github.com/petermeissner/golang-basic-cred/func.go:92.8,98.3 3 1
+github.com/petermeissner/golang-basic-cred/func.go:100.2,100.15 1 1
+github.com/petermeissner/golang-basic-cred/func.go:103.38,115.2 6 0
+github.com/petermeissner/golang-basic-cred/func.go:121.28,125.2 3 0
+github.com/petermeissner/golang-basic-cred/func.go:131.32,139.2 5 0
+github.com/petermeissner/golang-basic-cred/func.go:141.76,156.2 7 0
+github.com/petermeissner/golang-basic-cred/func.go:158.52,167.16 6 0
+github.com/petermeissner/golang-basic-cred/func.go:167.16,169.3 1 0
+github.com/petermeissner/golang-basic-cred/func.go:169.8,171.3 1 0

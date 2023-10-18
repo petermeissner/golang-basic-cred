@@ -1,0 +1,275 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>golang-basic-cred: Go Coverage Report</title>
+		<style>
+			body {
+				background: black;
+				color: rgb(80, 80, 80);
+			}
+			body, pre, #legend span {
+				font-family: Menlo, monospace;
+				font-weight: bold;
+			}
+			#topbar {
+				background: black;
+				position: fixed;
+				top: 0; left: 0; right: 0;
+				height: 42px;
+				border-bottom: 1px solid rgb(80, 80, 80);
+			}
+			#content {
+				margin-top: 50px;
+			}
+			#nav, #legend {
+				float: left;
+				margin-left: 10px;
+			}
+			#legend {
+				margin-top: 12px;
+			}
+			#nav {
+				margin-top: 10px;
+			}
+			#legend span {
+				margin: 0 5px;
+			}
+			.cov0 { color: rgb(192, 0, 0) }
+.cov1 { color: rgb(128, 128, 128) }
+.cov2 { color: rgb(116, 140, 131) }
+.cov3 { color: rgb(104, 152, 134) }
+.cov4 { color: rgb(92, 164, 137) }
+.cov5 { color: rgb(80, 176, 140) }
+.cov6 { color: rgb(68, 188, 143) }
+.cov7 { color: rgb(56, 200, 146) }
+.cov8 { color: rgb(44, 212, 149) }
+.cov9 { color: rgb(32, 224, 152) }
+.cov10 { color: rgb(20, 236, 155) }
+
+		</style>
+	</head>
+	<body>
+		<div id="topbar">
+			<div id="nav">
+				<select id="files">
+				
+				<option value="file0">github.com/petermeissner/golang-basic-cred/func.go (31.1%)</option>
+				
+				</select>
+			</div>
+			<div id="legend">
+				<span>not tracked</span>
+			
+				<span class="cov0">not covered</span>
+				<span class="cov8">covered</span>
+			
+			</div>
+		</div>
+		<div id="content">
+		
+		<pre class="file" id="file0" style="display: none">package library
+
+import (
+        "bufio"
+        "encoding/json"
+        "fmt"
+        "log"
+        "math/rand"
+        "os"
+        "strings"
+        "syscall"
+        "time"
+
+        "golang.org/x/crypto/bcrypt"
+        "golang.org/x/term"
+        "gorm.io/gorm"
+        "gorm.io/gorm/clause"
+)
+
+func Log_if_fatal(e error) <span class="cov8" title="1">{
+        if e != nil </span><span class="cov0" title="0">{
+                log.Fatal(e)
+        }</span>
+}
+
+// # str_random
+//
+// produce string of random characters of length n
+func Str_random(n int) string <span class="cov8" title="1">{
+        rand.Seed(time.Now().UnixNano())
+        letterRunes := []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!§$%&amp;/()=?+*'#,;.:-_")
+        b := make([]rune, n)
+        for i := range b </span><span class="cov8" title="1">{
+                b[i] = letterRunes[rand.Intn(len(letterRunes))]
+        }</span>
+        <span class="cov8" title="1">return string(b)</span>
+}
+
+// MakeCredential
+//
+// generates a credential from username, password and pepper
+func Make_credential(username string, password string, pepper string) Credential <span class="cov0" title="0">{
+
+        // generate random salt
+        salt := Str_random(20)
+
+        // salt and pepper pw then hash it
+        pw_hash := Hash_SaltPepper_Password(password, salt, pepper)
+
+        // return
+        cred := Credential{
+                Username: username,
+                Salt:     salt,
+                Hash:     string(pw_hash),
+        }
+        return cred
+}</span>
+
+func Hash_SaltPepper_Password(password string, salt string, pepper string) []byte <span class="cov8" title="1">{
+        salted_pw := password + salt + pepper
+        pw_hash, err := bcrypt.GenerateFromPassword([]byte(salted_pw), BCRYPT_DEFAULT_COST)
+        if err != nil </span><span class="cov0" title="0">{
+                panic(err)</span>
+        }
+        <span class="cov8" title="1">return pw_hash</span>
+}
+
+// MakeCredentialSQL
+//
+// generates a credential from username, password and pepper
+func Make_credential_sql(username string, password string, pepper string) CredentialSQL <span class="cov0" title="0">{
+        cred := Make_credential(username, password, pepper)
+        return CredentialSQL{Username: cred.Username, Hash: cred.Hash, Salt: cred.Salt}
+}</span>
+
+// Function to read in pepper
+//
+// looks for config file or creates one
+func Create_read_pepper() string <span class="cov8" title="1">{
+        fname := "pw.conf"
+        pepper := ""
+
+        _, err := os.Stat(fname)
+        if err != nil </span><span class="cov0" title="0">{
+
+                host, err := os.Hostname()
+                Log_if_fatal(err)
+                pepper = host + "-" + Str_random(12)
+                err = os.WriteFile(fname, []byte(pepper), 0600)
+                Log_if_fatal(err)
+
+        }</span> else<span class="cov8" title="1"> {
+
+                tmp, err := os.ReadFile(fname)
+                pepper = string(tmp)
+                Log_if_fatal(err)
+
+        }</span>
+
+        <span class="cov8" title="1">return pepper</span>
+}
+
+func Get_input(prompt string) string <span class="cov0" title="0">{
+
+        r := bufio.NewReader(os.Stdin)
+
+        fmt.Print(prompt)
+        text, _ := r.ReadString('\n')
+
+        // remove line endings from input string
+        text = strings.Replace(text, "\n", "", -1)
+        text = strings.Replace(text, "\r", "", -1)
+
+        return text
+}</span>
+
+// Function for printing Objects
+//
+// prints any object (as JSON)
+// as long as it can be serialized to JSON
+func Pretty_print(obj any) <span class="cov0" title="0">{
+        enc, err := json.MarshalIndent(obj, "", "  ")
+        Log_if_fatal(err)
+        fmt.Println(string(enc))
+}</span>
+
+// Function to retrieve name/password from terminal
+//
+// - will prompt for user input and
+// - will hide password input in terminal
+func Get_auth_from_term() Auth <span class="cov0" title="0">{
+        // get credentials
+        username := Get_input("Enter user name:")
+        fmt.Print("Enter password: ")
+        pw, err := term.ReadPassword(int(syscall.Stdin))
+        Log_if_fatal(err)
+
+        return Auth{Username: username, Password: string(pw)}
+}</span>
+
+func Upsert_auth_as_credential_to_db(db *gorm.DB, auth Auth) CredentialSQL <span class="cov0" title="0">{
+        // prepare data for database
+        p := Create_read_pepper()
+        cred := Make_credential_sql(auth.Username, auth.Password, p)
+
+        // store in db
+        db.AutoMigrate(&amp;CredentialSQL{})
+        db.Clauses(clause.OnConflict{
+                Columns:   []clause.Column{{Name: "username"}},
+                DoUpdates: clause.AssignmentColumns([]string{"salt", "hash"}),
+        }).Create(&amp;cred)
+
+        var res CredentialSQL
+        db.Where("Username = ?", cred.Username).Find(&amp;CredentialSQL{}).Scan(&amp;res)
+        return res
+}</span>
+
+func Check_credential(db *gorm.DB, auth Auth) bool <span class="cov0" title="0">{
+
+        var cred CredentialSQL
+        db.Where("Username = ?", auth.Username).First(&amp;CredentialSQL{}).Scan(&amp;cred)
+
+        // salt and pepper pw then hash it
+        pepper := Create_read_pepper()
+        salted_pw := auth.Password + cred.Salt + pepper
+        err := bcrypt.CompareHashAndPassword([]byte(cred.Hash), []byte(salted_pw))
+        if err != nil </span><span class="cov0" title="0">{
+                return false
+        }</span> else<span class="cov0" title="0"> {
+                return true
+        }</span>
+}
+</pre>
+		
+		</div>
+	</body>
+	<script>
+	(function() {
+		var files = document.getElementById('files');
+		var visible;
+		files.addEventListener('change', onChange, false);
+		function select(part) {
+			if (visible)
+				visible.style.display = 'none';
+			visible = document.getElementById(part);
+			if (!visible)
+				return;
+			files.value = part;
+			visible.style.display = 'block';
+			location.hash = part;
+		}
+		function onChange() {
+			select(files.value);
+			window.scrollTo(0, 0);
+		}
+		if (location.hash != "") {
+			select(location.hash.substr(1));
+		}
+		if (!visible) {
+			select("file0");
+		}
+	})();
+	</script>
+</html>
