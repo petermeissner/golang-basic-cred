@@ -25,10 +25,13 @@ jobs:
       - run: go env
       
       - name: Install dependencies
-        run: go get ./exec/credmanger && go get ./pkg
+        run: go get ./pkg
+
+      - name: Install dependencies
+        run: go get ./exec/credmanager
 
       - name: Build
-        run: go build -v ./credmanager
+        run: go build -v ./exec/credmanager
 
       - name: Build
         run: go build -v ./pkg
