@@ -76,8 +76,7 @@ func Make_credential_sql(username string, password string, pepper string) Creden
 // Function to read in pepper
 //
 // looks for config file or creates one
-func Create_read_pepper() string {
-	fname := "pw.conf"
+func Create_read_pepper(fname string) string {
 	pepper := ""
 
 	_, err := os.Stat(fname)
@@ -138,9 +137,9 @@ func Get_auth_from_term() Auth {
 	return Auth{Username: username, Password: string(pw)}
 }
 
-func Upsert_auth_as_credential_to_db(db *gorm.DB, auth Auth) CredentialSQL {
+func Upsert_auth_as_credential_to_db(db *gorm.DB, config_file string, auth Auth) CredentialSQL {
 	// prepare data for database
-	p := Create_read_pepper()
+	p := Create_read_pepper(config_file)
 	cred := Make_credential_sql(auth.Username, auth.Password, p)
 
 	// store in db
@@ -155,13 +154,13 @@ func Upsert_auth_as_credential_to_db(db *gorm.DB, auth Auth) CredentialSQL {
 	return res
 }
 
-func Check_credential(db *gorm.DB, auth Auth) bool {
+func Check_credential(db *gorm.DB, config_file string, auth Auth) bool {
 
 	var cred CredentialSQL
 	db.Where("Username = ?", auth.Username).First(&CredentialSQL{}).Scan(&cred)
 
 	// salt and pepper pw then hash it
-	pepper := Create_read_pepper()
+	pepper := Create_read_pepper(config_file)
 	salted_pw := auth.Password + cred.Salt + pepper
 	err := bcrypt.CompareHashAndPassword([]byte(cred.Hash), []byte(salted_pw))
 	if err != nil {

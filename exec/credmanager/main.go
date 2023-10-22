@@ -34,7 +34,7 @@ func main() {
 			auth := cred.Get_auth_from_term()
 
 			// Hash credentials and store them in db
-			cred.Upsert_auth_as_credential_to_db(db, auth)
+			cred.Upsert_auth_as_credential_to_db(db, "credmanager.conf", auth)
 
 			// check results
 			var res []cred.CredentialSQL
@@ -49,7 +49,7 @@ func main() {
 			// get authentication info
 			auth := cred.Get_auth_from_term()
 
-			is_ok := cred.Check_credential(db, auth)
+			is_ok := cred.Check_credential(db, "credmanager.conf", auth)
 			if is_ok {
 				fmt.Println("Check OK")
 			} else {

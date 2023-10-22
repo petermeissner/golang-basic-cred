@@ -69,11 +69,11 @@ func Test_basic_hashing(t *testing.T) {
 	slt := Str_random(14)
 
 	pw1 := "ohmei"
-	ppr1 := Create_read_pepper()
+	ppr1 := Create_read_pepper("credentials.conf")
 	hash_1 := Hash_SaltPepper_Password(pw1, slt, ppr1)
 
 	pw2 := "ohmei"
-	ppr2 := Create_read_pepper()
+	ppr2 := Create_read_pepper("credentials.conf")
 	hash_2 := Hash_SaltPepper_Password(pw2, slt, ppr2)
 
 	matching_pw1 := bcrypt.CompareHashAndPassword(hash_1, []byte(pw1+slt+ppr1))
