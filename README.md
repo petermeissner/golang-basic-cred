@@ -16,7 +16,7 @@ Allows to (see ./library/func.go and ./library/structs.go) ...
 # Build Binary / Build Credentials-Manager
 
 ```
-go build ./credmanager/
+go build ./exec/credmanager/
 ```
 
 
